@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PPT 생성</title>
+</head>
+<body>
+<form action="/create" method="post">
+    <div>
+        <label for="firstSong">경배찬양: </label>
+        <input type="text" name="firstSong" id="firstSong" placeholder="찬송가 장수를 입력하세요 (예시: 200)">
+    </div>
+    <div>
+        <label for="reading">교독문: </label>
+        <input type="text" name="reading" id="reading">
+    </div>
+    <div>
+        <label for="secondSong">송영: </label>
+        <input type="text" name="secondSong" id="secondSong">
+    </div>
+    <div>
+        <label for="pray">공동의기도: </label>
+        <input type="text" name="pray" id="pray">
+    </div>
+    <div>
+        <label for="thirdSong">감사찬송: </label>
+        <input type="text" name="thirdSong" id="thirdSong">
+    </div>
+    <div>
+        <label for="fourthSong">결단찬송: </label>
+        <input type="text" name="fourthSong" id="fourthSong">
+    </div>
+    <button type="submit">전송</button>
+    <button type="button" onclick="foo()">전송</button>
+</form>
+<script>
+    function foo() {
+        alert('Success!');
+    }
+</script>
+</body>
+</html>
