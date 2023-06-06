@@ -1,6 +1,6 @@
 package changhu.presentation.controller;
 
-import changhu.presentation.domain.item.Item;
+import changhu.presentation.dto.CreateInfoDto;
 import changhu.presentation.service.CreateService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,10 @@ public class CreateController {
 
 //    @ResponseBody
     @PostMapping("/create")
-    public void create(Item item, HttpServletResponse response) throws IOException {
-//        log.info(item.getReading());
+    public void create(CreateInfoDto createInfoDto, HttpServletResponse response) throws IOException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");
         String documentName = dateFormat.format(new Date());
-        byte[] bytes = createService.createPresentationService(item, documentName);
+        byte[] bytes = createService.createPresentationService(createInfoDto, documentName);
 
         response.setHeader("Content-Disposition",
                 "attachment;filename=\"" + documentName + ".pptx\""
