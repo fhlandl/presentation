@@ -26,7 +26,7 @@ public class CreateController {
 //    @ResponseBody
     @PostMapping("/create")
     public void create(CreateInfoDto createInfoDto, HttpServletResponse response) throws IOException {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String documentName = dateFormat.format(new Date());
         byte[] bytes = createService.createPresentationService(createInfoDto, documentName);
 

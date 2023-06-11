@@ -2,8 +2,12 @@ package changhu.presentation.service;
 
 import changhu.presentation.dto.CreateInfoDto;
 import changhu.presentation.util.FileUtils;
+import changhu.presentation.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xslf.usermodel.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -102,28 +106,49 @@ public class CreateService {
 
     private void makeContents(XMLSlideShow ppt, CreateInfoDto createInfoDto) throws IOException {
         appendHymnSlides(ppt, createInfoDto.getFirstSong()); // 1. 경배 찬양
+        appendEmptySlide(ppt);
         // 2. 교독문
         // 3. 사도신경
         // 4. 송영
         // 5. 공동의 기도
         appendBibleSlides(ppt, createInfoDto.getBible()); // 6. 말씀
+        appendEmptySlide(ppt);
         // 7. 감사 찬송
         // 8. 결단 찬송
     }
 
+    private void appendEmptySlide(XMLSlideShow ppt) {
+        XSLFSlideLayout layout = slideLayoutMap.get(SlideLayoutEnum.EMPTY);
+        ppt.createSlide(layout);
+    }
+
     private void appendHymnSlides(XMLSlideShow ppt, int songNum) {
-        Document hymn = fetchService.fetchHymn(songNum);
-        // ToDo: fetch한 html 파싱하여 가사 추출
+        // hymn을 fetch하여 하는 방식은 불안정하여 기각
+//        Document hymn = fetchService.fetchHymn(songNum);
 
-        List<String> lyricsList = new ArrayList<>();
-        String sample = "달고 오묘한 그 말씀 생명의 말씀은 귀한 그 말씀 진실로 생명의 말씀이 나의 길과 믿음 밝히 보여 주니";
-        lyricsList.add(sample);
         XSLFSlideLayout layout = slideLayoutMap.get(SlideLayoutEnum.HYMN);
-
-        for (String lyrics : lyricsList) {
-            XSLFSlide slide = ppt.createSlide(layout);
-            XSLFTextShape placeholder = slide.getPlaceholder(0);
-            placeholder.setText(lyrics);
+        String hymnPath = "src/main/resources/static/hymn.json";
+        try {
+            JSONObject json = JsonUtils.getJsonFromFile(hymnPath);
+            JSONArray verses = (JSONArray) json.get(Integer.toString(songNum));
+            XSLFSlide slide = null;
+            XSLFTextShape placeholder = null;
+            for (Object verse : verses) {
+                JSONArray lyrics = (JSONArray) verse;
+                for (int idx = 0; idx < lyrics.size(); idx++) {
+                    if (idx % 2 == 0) {
+                        slide = ppt.createSlide(layout);
+                        placeholder = slide.getPlaceholder(0);
+                        placeholder.setText((String) lyrics.get(idx));
+                    } else {
+                        placeholder.appendText((String) lyrics.get(idx), true);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 

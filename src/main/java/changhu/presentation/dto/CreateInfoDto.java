@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CreateInfoDto {
 
     private Integer firstSong; // 경배 찬양
-    private String versicle; // 교독
+    private Integer versicle; // 교독문
     private Integer secondSong; // 송영
     private String pray; // 공동의 기도
     private MultipartFile bible; // 말씀
