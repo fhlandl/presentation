@@ -8,13 +8,14 @@ import org.apache.poi.xslf.usermodel.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 enum SlideLayoutEnum {
     EMPTY,
@@ -157,12 +158,31 @@ public class CreateService {
         BufferedReader br = new BufferedReader(
                 new InputStreamReader(multipartFile.getInputStream(), StandardCharsets.UTF_8)
         );
-        String sampleTitle = br.readLine();
-        String sampleContents = br.readLine();
-        XSLFSlide slide = ppt.createSlide(layout);
-        XSLFTextShape placeholder = slide.getPlaceholder(0);
-        placeholder.setText(sampleTitle);
-        placeholder = slide.getPlaceholder(1);
-        placeholder.setText(sampleContents);
+        Pattern pattern = Pattern.compile("\\d+ ");
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            String title = line;
+            String contents = br.readLine();
+            List<Integer> startIndices = new ArrayList<>();
+            Matcher matcher = pattern.matcher(contents);
+
+            while (matcher.find()) {
+                startIndices.add(matcher.start());
+            }
+
+            for (int i = 0; i <= startIndices.size() - 1; i++) {
+                String content;
+                if (i == startIndices.size() - 1) {
+                    content = contents.substring(startIndices.get(i));
+                } else {
+                    content = contents.substring(startIndices.get(i), startIndices.get(i + 1));
+                }
+                XSLFSlide slide = ppt.createSlide(layout);
+                XSLFTextShape placeholder = slide.getPlaceholder(0);
+                placeholder.setText(title);
+                placeholder = slide.getPlaceholder(1);
+                placeholder.setText(content);
+            }
+        }
     }
 }
