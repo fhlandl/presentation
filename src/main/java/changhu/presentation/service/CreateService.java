@@ -123,7 +123,10 @@ public class CreateService {
         ppt.createSlide(layout);
     }
 
-    private void appendHymnSlides(XMLSlideShow ppt, int songNum) {
+    private void appendHymnSlides(XMLSlideShow ppt, Integer songNum) {
+        if (songNum == null) {
+            return;
+        }
         // hymn을 fetch하여 하는 방식은 불안정하여 기각
 //        Document hymn = fetchService.fetchHymn(songNum);
 
@@ -154,6 +157,9 @@ public class CreateService {
     }
 
     private void appendBibleSlides(XMLSlideShow ppt, MultipartFile multipartFile) throws IOException {
+        if (multipartFile == null) {
+            return;
+        }
         XSLFSlideLayout layout = slideLayoutMap.get(SlideLayoutEnum.BIBLE);
         BufferedReader br = new BufferedReader(
                 new InputStreamReader(multipartFile.getInputStream(), StandardCharsets.UTF_8)
