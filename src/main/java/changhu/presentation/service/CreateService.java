@@ -106,16 +106,25 @@ public class CreateService {
     }
 
     private void makeContents(XMLSlideShow ppt, CreateInfoDto createInfoDto) throws IOException {
-        appendHymnSlides(ppt, createInfoDto.getFirstSong()); // 1. 경배 찬양
+        // 1. 경배 찬양
+        appendHymnSlides(ppt, createInfoDto.getFirstSong());
         appendEmptySlide(ppt);
         // 2. 교독문
         // 3. 사도신경
         // 4. 송영
+        appendHymnSlides(ppt, createInfoDto.getSecondSong());
+        appendEmptySlide(ppt);
         // 5. 공동의 기도
-        appendBibleSlides(ppt, createInfoDto.getBible()); // 6. 말씀
+        appendPrayerSlides(ppt, createInfoDto.getPray());
+        appendEmptySlide(ppt);
+        // 6. 말씀
+        appendBibleSlides(ppt, createInfoDto.getBible());
         appendEmptySlide(ppt);
         // 7. 감사 찬송
+        appendHymnSlides(ppt, createInfoDto.getThirdSong());
+        appendEmptySlide(ppt);
         // 8. 결단 찬송
+        appendHymnSlides(ppt, createInfoDto.getLastSong());
     }
 
     private void appendEmptySlide(XMLSlideShow ppt) {
@@ -190,5 +199,15 @@ public class CreateService {
                 placeholder.setText(content);
             }
         }
+    }
+
+    private void appendPrayerSlides(XMLSlideShow ppt, String contents) {
+        if (contents == null) {
+            return;
+        }
+        XSLFSlideLayout layout = slideLayoutMap.get(SlideLayoutEnum.PRAY);
+        XSLFSlide slide = ppt.createSlide(layout);
+        XSLFTextShape placeholder = slide.getPlaceholder(0);
+        placeholder.setText(contents);
     }
 }
