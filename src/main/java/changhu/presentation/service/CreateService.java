@@ -110,6 +110,8 @@ public class CreateService {
         appendHymnSlides(ppt, createInfoDto.getFirstSong());
         appendEmptySlide(ppt);
         // 2. 교독문
+        appendVersicleSlides(ppt, createInfoDto.getVersicle());
+        appendEmptySlide(ppt);
         // 3. 사도신경
         appendCreedSlides(ppt);
         appendEmptySlide(ppt);
@@ -221,6 +223,38 @@ public class CreateService {
             XSLFSlide slide = ppt.createSlide(layout);
             XSLFTextShape placeholder = slide.getPlaceholder(0);
             placeholder.setText((String) line);
+        }
+    }
+
+    private void appendVersicleSlides(XMLSlideShow ppt, Integer versicleNum) throws IOException, ParseException {
+        if (versicleNum == null) {
+            return;
+        }
+        XSLFSlideLayout layout = slideLayoutMap.get(SlideLayoutEnum.VERSICLE);
+
+        String versiclePath = "src/main/resources/static/versicle.json";
+        JSONObject json = JsonUtils.getJsonFromFile(versiclePath);
+        JSONObject versicle = (JSONObject) json.get(Integer.toString(versicleNum));
+
+        String title = (String) versicle.get("title");
+        JSONArray contents = (JSONArray) versicle.get("content");
+
+        XSLFSlide slide = null;
+        XSLFTextShape placeholder = null;
+
+        for (int idx = 0; idx < contents.size(); idx++) {
+            if (idx % 2 == 0) {
+                slide = ppt.createSlide(layout);
+
+                // 제목
+                placeholder = slide.getPlaceholder(1);
+                placeholder.setText(title);
+                // 내용
+                placeholder = slide.getPlaceholder(0);
+                placeholder.setText((String) contents.get(idx));
+            } else {
+                placeholder.appendText((String) contents.get(idx), true);
+            }
         }
     }
 }
