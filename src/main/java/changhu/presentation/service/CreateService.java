@@ -51,7 +51,7 @@ public class CreateService {
         this.fetchService = fetchService;
     }
 
-    public byte[] createPresentationService(CreateInfoDto createInfoDto, String documentName) throws IOException {
+    public byte[] createPresentationService(CreateInfoDto createInfoDto, String documentName) throws IOException, ParseException {
 
         String extension = ".pptx";
         String fileName = documentName + extension;
@@ -105,12 +105,14 @@ public class CreateService {
         }
     }
 
-    private void makeContents(XMLSlideShow ppt, CreateInfoDto createInfoDto) throws IOException {
+    private void makeContents(XMLSlideShow ppt, CreateInfoDto createInfoDto) throws IOException, ParseException {
         // 1. 경배 찬양
         appendHymnSlides(ppt, createInfoDto.getFirstSong());
         appendEmptySlide(ppt);
         // 2. 교독문
         // 3. 사도신경
+        appendCreedSlides(ppt);
+        appendEmptySlide(ppt);
         // 4. 송영
         appendHymnSlides(ppt, createInfoDto.getSecondSong());
         appendEmptySlide(ppt);
@@ -132,7 +134,7 @@ public class CreateService {
         ppt.createSlide(layout);
     }
 
-    private void appendHymnSlides(XMLSlideShow ppt, Integer songNum) {
+    private void appendHymnSlides(XMLSlideShow ppt, Integer songNum) throws IOException, ParseException {
         if (songNum == null) {
             return;
         }
@@ -140,28 +142,25 @@ public class CreateService {
 //        Document hymn = fetchService.fetchHymn(songNum);
 
         XSLFSlideLayout layout = slideLayoutMap.get(SlideLayoutEnum.HYMN);
+
         String hymnPath = "src/main/resources/static/hymn.json";
-        try {
-            JSONObject json = JsonUtils.getJsonFromFile(hymnPath);
-            JSONArray verses = (JSONArray) json.get(Integer.toString(songNum));
-            XSLFSlide slide = null;
-            XSLFTextShape placeholder = null;
-            for (Object verse : verses) {
-                JSONArray lyrics = (JSONArray) verse;
-                for (int idx = 0; idx < lyrics.size(); idx++) {
-                    if (idx % 2 == 0) {
-                        slide = ppt.createSlide(layout);
-                        placeholder = slide.getPlaceholder(0);
-                        placeholder.setText((String) lyrics.get(idx));
-                    } else {
-                        placeholder.appendText((String) lyrics.get(idx), true);
-                    }
+        JSONObject json = JsonUtils.getJsonFromFile(hymnPath);
+        JSONArray verses = (JSONArray) json.get(Integer.toString(songNum));
+
+        XSLFSlide slide = null;
+        XSLFTextShape placeholder = null;
+
+        for (Object verse : verses) {
+            JSONArray lyrics = (JSONArray) verse;
+            for (int idx = 0; idx < lyrics.size(); idx++) {
+                if (idx % 2 == 0) {
+                    slide = ppt.createSlide(layout);
+                    placeholder = slide.getPlaceholder(0);
+                    placeholder.setText((String) lyrics.get(idx));
+                } else {
+                    placeholder.appendText((String) lyrics.get(idx), true);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -209,5 +208,19 @@ public class CreateService {
         XSLFSlide slide = ppt.createSlide(layout);
         XSLFTextShape placeholder = slide.getPlaceholder(0);
         placeholder.setText(contents);
+    }
+
+    private void appendCreedSlides(XMLSlideShow ppt) throws IOException, ParseException {
+        XSLFSlideLayout layout = slideLayoutMap.get(SlideLayoutEnum.CREED);
+
+        String creedPath = "src/main/resources/static/creed.json";
+        JSONObject json = JsonUtils.getJsonFromFile(creedPath);
+        JSONArray creed = (JSONArray) json.get("creed");
+
+        for (Object line : creed) {
+            XSLFSlide slide = ppt.createSlide(layout);
+            XSLFTextShape placeholder = slide.getPlaceholder(0);
+            placeholder.setText((String) line);
+        }
     }
 }

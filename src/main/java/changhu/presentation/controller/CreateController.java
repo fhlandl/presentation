@@ -4,6 +4,7 @@ import changhu.presentation.dto.CreateInfoDto;
 import changhu.presentation.service.CreateService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class CreateController {
 
 //    @ResponseBody
     @PostMapping("/create")
-    public void create(CreateInfoDto createInfoDto, HttpServletResponse response) throws IOException {
+    public void create(CreateInfoDto createInfoDto, HttpServletResponse response) throws IOException, ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String documentName = dateFormat.format(new Date());
         byte[] bytes = createService.createPresentationService(createInfoDto, documentName);
