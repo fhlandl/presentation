@@ -11,56 +11,13 @@
         <div class="container-xxl text-light fs-1 fw-bold">Changhu Worship PPT</div>
     </nav>
     <section class="container-lg py-3">
-        <form action="/create" method="post" enctype="multipart/form-data">
+        <form action="/main" method="get">
             <div class="row mb-3">
-                <label for="firstSong" class="col-sm-2 col-form-label col-form-label-lg fw-semibold">경배 찬양</label>
+                <label for="password" class="col-sm-2 col-form-label col-form-label-lg fw-semibold">password: </label>
                 <div class="col-sm-10">
-                    <input type="text" id="firstSong" name="firstSong" class="form-control form-control-lg"
-                           placeholder="찬송가 번호를 입력하세요. (예: 200)">
+                    <input type="password" id="password" name="password" class="form-control form-control-lg"
+                           placeholder="암호를 입력하세요.">
                 </div>
-            </div>
-            <div class="row mb-3">
-                <label for="versicle" class="col-sm-2 col-form-label col-form-label-lg fw-semibold">교독문</label>
-                <div class="col-sm-10">
-                    <input type="text" id="versicle" name="versicle" class="form-control form-control-lg"
-                           placeholder="교독문 번호를 입력하세요. (예: 20)">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="secondSong" class="col-sm-2 col-form-label col-form-label-lg fw-semibold">송영</label>
-                <div class="col-sm-10">
-                    <input type="text" id="secondSong" name="secondSong" class="form-control form-control-lg"
-                           placeholder="찬송가 번호를 입력하세요. (예: 200)">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="pray" class="col-sm-2 col-form-label col-form-label-lg fw-semibold">공동의 기도</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control" id="pray" name="pray" placeholder="공동의 기도를 입력하세요."></textarea>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-2 col-form-label col-form-label-lg fw-semibold">말씀</label>
-                <div class="col-sm-10">
-                    <input type="file" accept="text/plain" id="bible" name="bible" class="form-control form-control-lg">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="thirdSong" class="col-sm-2 col-form-label col-form-label-lg fw-semibold">감사 찬송</label>
-                <div class="col-sm-10">
-                    <input type="text" id="thirdSong" name="thirdSong" class="form-control form-control-lg"
-                           placeholder="찬송가 번호를 입력하세요. (예: 200)">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <label for="lastSong" class="col-sm-2 col-form-label col-form-label-lg fw-semibold">결단 찬송</label>
-                <div class="col-sm-10">
-                    <input type="text" id="lastSong" name="lastSong" class="form-control form-control-lg"
-                           placeholder="찬송가 번호를 입력하세요. (예: 200)">
-                </div>
-            </div>
-            <div class="col-auto py-3">
-                <button type="submit" class="btn btn-primary btn-lg">파일 생성</button>
             </div>
         </form>
     </section>

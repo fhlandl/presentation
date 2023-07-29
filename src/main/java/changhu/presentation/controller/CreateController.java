@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
@@ -24,6 +25,13 @@ public class CreateController {
         this.createService = createService;
     }
 
+    @GetMapping("/main")
+    public String main(Integer password) {
+        if (password.equals(1124)) {
+            return "main";
+        }
+        return "redirect:/";
+    }
 //    @ResponseBody
     @PostMapping("/create")
     public void create(CreateInfoDto createInfoDto, HttpServletResponse response) throws IOException, ParseException {
