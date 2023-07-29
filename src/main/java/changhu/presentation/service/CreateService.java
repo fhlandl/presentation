@@ -247,13 +247,16 @@ public class CreateService {
                 slide = ppt.createSlide(layout);
 
                 // 제목
-                placeholder = slide.getPlaceholder(1);
+                placeholder = slide.getPlaceholder(0);
                 placeholder.setText(title);
                 // 내용
-                placeholder = slide.getPlaceholder(0);
+                placeholder = slide.getPlaceholder(1);
                 placeholder.setText((String) contents.get(idx));
             } else {
-                placeholder.appendText((String) contents.get(idx), true);
+                XSLFTextParagraph paragraph = placeholder.addNewTextParagraph();
+                XSLFTextRun run = paragraph.addNewTextRun();
+                run.setText((String) contents.get(idx));
+                run.setBold(true);
             }
         }
     }
